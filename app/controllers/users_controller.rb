@@ -26,18 +26,43 @@ class UsersController < ApplicationController
   # POST /users.json
   def create
     #complete this method
+    @user = User.new(user_params)
+
+    respond_to do |format|
+      if @user.save
+        format.html { redirect_to @user, flash[:notice] = 'User was successfully created.' }
+        format.json { render :show, status: :created, location: @user }
+      else
+        format.html { render :new, flash[:notice] = 'User can be created.'  }
+        format.json { render json: @user.errors, status: :unprocessable_entity }
+      end
+    end
   end
 
   # PATCH/PUT /users/1
   # PATCH/PUT /users/1.json
   def update
     #complete this method
+    respond_to do |format|
+      if @user.update(user_params)
+        format.html { redirect_to @user, flash[:notice] =  'User was successfully updated.' }
+        format.json { render :show, status: :ok, location: @user }
+      else
+        format.html { render :edit, flash[:notice] = 'User can be updated.' }
+        format.json { render json: @user.errors, status: :unprocessable_entity }
+      end
+    end
   end
 
   # DELETE /users/1
   # DELETE /users/1.json
   def destroy
     #complete this method
+    @user.destroy
+    respond_to do |format|
+      format.html { redirect_to users_url, flash[:notice] = 'User was successfully destroyed.' }
+      format.json { head :no_content }
+    end
   end
 
   private
