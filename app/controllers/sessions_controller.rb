@@ -1,5 +1,6 @@
 class SessionsController < ApplicationController
 	def new
+    @user = User.new(id: cookies[:registrationcookie])
 	end
 
 	def create
@@ -7,7 +8,7 @@ class SessionsController < ApplicationController
     user = User.find_by_email(params[:email])
 		if user && User.authenticate(params[:email], params[:password])
 			session[:current_user_id] = user.id
-      Cookies[:registrationcookie] = user.id
+      cookies[:registrationcookie] = user.id
 			flash[:notice] = 'User was login successfully '
 			redirect_to users_path
 		else
@@ -20,8 +21,9 @@ class SessionsController < ApplicationController
 	def destroy
 		#complete this method
 		@_current_user = session[:current_user_id] = nil
-    Cookies.delete(:registrationcookie)
+    cookies.delete(:registrationcookie)
 
 		redirect_to root_path
-	end
+  end
+
 end
